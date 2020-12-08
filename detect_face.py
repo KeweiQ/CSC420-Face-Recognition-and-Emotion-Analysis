@@ -155,4 +155,6 @@ def rotate(name):
 
 # main program
 if __name__ == '__main__':
-    rotate('detect_face/emily.jpg')
+    rotate('detect_face/ini1.jpg')
+    rotate('detect_face/ini2.jpg')
+    rotate('detect_face/ini3.jpg')
