@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+from PIL import Image
+
 
 def rotate(name):
     # create face_cascade and eye_cascade objects
@@ -28,6 +30,10 @@ def rotate(name):
     # draw rectangles around faces
     for (x, y,  w,  h) in faces:
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 3)
+
+        center_x = x + h // 2
+        center_y = y + w // 2
+
     cv2.imshow('window_name', img)
     # waits for user to press any key
     # (this is necessary to avoid Python kernel form crashing)
@@ -41,9 +47,16 @@ def rotate(name):
 
     # detect eyes in image
     # 1 pair of eyes per image for now, implement multi face version later
-    eyes = eye_cascade.detectMultiScale(gray, 1.1, 5)
-    index = 0
+    minNeighbors = 5
+    eyes = eye_cascade.detectMultiScale(gray, 1.1, minNeighbors)
+    while eyes.shape[0] > 2:
+        minNeighbors += 1
+        eyes = eye_cascade.detectMultiScale(gray, 1.1, minNeighbors)
+    while eyes.shape[0] < 2:
+        minNeighbors -= 1
+        eyes = eye_cascade.detectMultiScale(gray, 1.1, minNeighbors)
 
+    index = 0
     # divide one eye from another
     for (ex, ey,  ew,  eh) in eyes:
         if index == 0:
@@ -51,16 +64,15 @@ def rotate(name):
         elif index == 1:
             eye2 = (ex, ey, ew, eh)
 
-        if index < 2:
-            # draw rectangles around detected eyes
-            cv2.rectangle(img, (ex, ey), (ex + ew, ey + eh), (0, 0, 255), 3)
-            index = index + 1
-            cv2.imshow('window_name', img)
-            # waits for user to press any key
-            # (this is necessary to avoid Python kernel form crashing)
-            cv2.waitKey(0)
-            # closing all open windows
-            cv2.destroyAllWindows()
+        # draw rectangles around detected eyes
+        cv2.rectangle(img, (ex, ey), (ex + ew, ey + eh), (0, 0, 255), 3)
+        index = index + 1
+        cv2.imshow('window_name', img)
+        # waits for user to press any key
+        # (this is necessary to avoid Python kernel form crashing)
+        cv2.waitKey(0)
+        # closing all open windows
+        cv2.destroyAllWindows()
 
     # differentiate between left eye and right eye
     if eye1[0] < eye2[0]:
@@ -116,42 +128,42 @@ def rotate(name):
 
     # calculate center point of the image
     # integer division "//"" ensures that we receive whole numbers
-    center = (w // 2, h // 2)
+    # center = (w // 2, h // 2)
+    center = (center_x, center_y)
 
     # get roration matrix M using cv2.getRotationMatrix2D
     M = cv2.getRotationMatrix2D(center, angle, 1.0)
+
+    # load image again
+    img = cv2.imread(name)
+
     # apply the rotation to our image using cv2.warpAffine
     rotated = cv2.warpAffine(img, M, (w, h))
-    cv2.imshow('window_name', rotated)
+
+    img1 = Image.fromarray(img)
+    rotated = np.array(img1.rotate(angle))
+
+    # print(img.shape, rotated.shape)
+
+    # convert the image into grayscale
+    rotated_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # detect faces in image
+    # 1 face per image for now, implement multi face version later
+    faces = face_cascade.detectMultiScale(rotated_gray, 1.1, 5)
+    # draw rectangles around faces
+    for (x, y, w, h) in faces:
+        cv2.rectangle(rotated, (x, y), (x + w, y + h), (0, 255, 0), 3)
+
+    cv2.namedWindow("window", cv2.WINDOW_AUTOSIZE)
+    cv2.imshow('window', rotated)
     # waits for user to press any key
     # (this is necessary to avoid Python kernel form crashing)
     cv2.waitKey(0)
     # closing all open windows
     cv2.destroyAllWindows()
 
-    # # calculate distance between the eyes in the first image
-    # dist_1 = np.sqrt((delta_x * delta_x) + (delta_y * delta_y))
-    # # calculate distance between the eyes in the second image
-    # dist_2 = np.sqrt((delta_x_1 * delta_x_1) + (delta_y_1 * delta_y_1))
-    #
-    # # calculate the ratio
-    # ratio = dist_1 / dist_2
-    # # Defining the width and height
-    # h=476
-    # w=488
-    # # Defining aspect ratio of a resized image
-    # dim = (int(w * ratio), int(h * ratio))
-    # # We have obtained a new image that we call resized3
-    # resized = cv2.resize(rotated, dim)
-    # cv2_imshow(resized)
-    # # Defining the width and height
-    # h=740
-    # w=723
-    # # Defining aspect ratio of a resized image
-    # dim = (int(w * ratio), int(h * ratio))
-    # # We have obtained a new image that we call resized3
-    # resized = cv2.resize(rotated, dim)
-    # cv2_imshow(resized)
+    cv2.imwrite(name + '.result.jpg', rotated)
 
 # main program
 if __name__ == '__main__':
