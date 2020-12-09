@@ -131,39 +131,52 @@ def rotate(name):
     # center = (w // 2, h // 2)
     center = (center_x, center_y)
 
-    # get roration matrix M using cv2.getRotationMatrix2D
-    M = cv2.getRotationMatrix2D(center, angle, 1.0)
+    # # get roration matrix M using cv2.getRotationMatrix2D
+    # M = cv2.getRotationMatrix2D(center, angle, 1.0)
 
     # load image again
     img = cv2.imread(name)
 
     # apply the rotation to our image using cv2.warpAffine
-    rotated = cv2.warpAffine(img, M, (w, h))
+    # rotated = cv2.warpAffine(img, M, (w, h))
 
     img1 = Image.fromarray(img)
     rotated = np.array(img1.rotate(angle))
+    cropped = crop_face(rotated)
 
-    # print(img.shape, rotated.shape)
+    # cv2.imshow('window', rotated)
+    # # waits for user to press any key
+    # # (this is necessary to avoid Python kernel form crashing)
+    # cv2.waitKey(0)
+    # # closing all open windows
+    # cv2.destroyAllWindows()
 
+    cv2.imwrite(name + '.result.jpg', cropped)
+
+
+def crop_face(rotated):
     # convert the image into grayscale
-    rotated_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    rotated_gray = cv2.cvtColor(rotated, cv2.COLOR_BGR2GRAY)
 
     # detect faces in image
     # 1 face per image for now, implement multi face version later
+
+    face_cascade=cv2.CascadeClassifier("detect_face/haarcascade_frontalface_default.xml")
     faces = face_cascade.detectMultiScale(rotated_gray, 1.1, 5)
     # draw rectangles around faces
     for (x, y, w, h) in faces:
-        cv2.rectangle(rotated, (x, y), (x + w, y + h), (0, 255, 0), 3)
+        # cv2.rectangle(rotated, (x, y), (x + w, y + h), (0, 255, 0), 3)
 
-    cv2.namedWindow("window", cv2.WINDOW_AUTOSIZE)
-    cv2.imshow('window', rotated)
+         cropped = rotated[x:x+w, y:y+h]
+    cv2.imshow('window', cropped)
     # waits for user to press any key
     # (this is necessary to avoid Python kernel form crashing)
     cv2.waitKey(0)
     # closing all open windows
     cv2.destroyAllWindows()
 
-    cv2.imwrite(name + '.result.jpg', rotated)
+    return cropped
+
 
 # main program
 if __name__ == '__main__':
