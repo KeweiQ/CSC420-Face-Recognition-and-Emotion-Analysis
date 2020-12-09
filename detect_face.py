@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 
-def detect_face(name):
+def detect_face(name, mode):
     # load image
     original = read_image(name)
     # make deep copy of the image
@@ -14,7 +14,7 @@ def detect_face(name):
     gray = convert_to_grayscale(img)
 
     # detect and show faces in the original image
-    faces = find_face_regions(img, gray)
+    faces = find_face_regions(img, gray, mode)
     if faces is None:
         return None
 
@@ -27,7 +27,7 @@ def detect_face(name):
         roi_gray = copy.deepcopy(gray[y:y+h, x:x+w])
 
         # detect eyes in face region
-        left_eye, right_eye = find_eyes(roi_color, roi_gray)
+        left_eye, right_eye = find_eyes(roi_color, roi_gray, mode)
         if left_eye is None:
             continue
 
@@ -73,7 +73,7 @@ def convert_to_grayscale(img):
     return gray
 
 
-def find_face_regions(img, gray):
+def find_face_regions(img, gray, mode):
     # create face cascade
     face_cascade = cv2.CascadeClassifier("detect_face/haarcascade_frontalface_default.xml")
 
@@ -106,7 +106,7 @@ def find_face_regions(img, gray):
     return faces
 
 
-def find_eyes(roi_color, roi_gray):
+def find_eyes(roi_color, roi_gray, mode):
     # create eye cascade
     eye_cascade = cv2.CascadeClassifier("detect_face/haarcascade_eye.xml")
 
@@ -271,24 +271,24 @@ def crop_face(rotated):
 
 def test_detect_face():
     # # images with no face
-    # detect_face('detect_face/no1.jpg')
-    # detect_face('detect_face/no2.jpg')
-    # detect_face('detect_face/no3.jpg')
+    # detect_face('detect_face/no1.jpg', 'auto')
+    # detect_face('detect_face/no2.jpg', 'auto')
+    # detect_face('detect_face/no3.jpg', 'auto')
     #
     # # images with incomplete face
-    # detect_face('detect_face/incomplete1.jpg')
-    # detect_face('detect_face/incomplete2.jpg')
-    # detect_face('detect_face/incomplete3.jpg')
+    # detect_face('detect_face/incomplete1.jpg', 'auto')
+    # detect_face('detect_face/incomplete2.jpg', 'auto')
+    # detect_face('detect_face/incomplete3.jpg', 'auto')
     #
     # # images with single face
-    # detect_face('detect_face/single1.jpg')
-    # detect_face('detect_face/single2.jpg')
-    # detect_face('detect_face/single3.jpg')
+    # detect_face('detect_face/single1.jpg', 'auto')
+    # detect_face('detect_face/single2.jpg', 'auto')
+    # detect_face('detect_face/single3.jpg', 'auto')
 
     # images with multi faces
-    detect_face('detect_face/multi1.jpg')
-    detect_face('detect_face/multi2.jpg')
-    detect_face('detect_face/multi3.jpg')
+    detect_face('detect_face/multi1.jpg', 'auto')
+    detect_face('detect_face/multi2.jpg', 'auto')
+    detect_face('detect_face/multi3.jpg', 'auto')
 
 
 # main program
