@@ -18,7 +18,7 @@ if __name__ == '__main__':
     img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label = \
         preprocess_dataset.split_data(dataset_list)
 
-    # Perform dimensionality reduction on the datasets
+    # Perform face detection dimensionality reduction on the datasets
     # TODO: Implement this
     img_train_reduced = img_train
     img_validation_reduced = img_validation
