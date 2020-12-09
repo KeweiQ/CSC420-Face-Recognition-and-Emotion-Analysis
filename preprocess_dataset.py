@@ -10,6 +10,7 @@ import glob
 import numpy as np
 
 from cv2 import cv2
+from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 
 
@@ -66,8 +67,12 @@ def split_data(dataset_tuple_list):
     for data_tuple in dataset_tuple_list:
         images.append(data_tuple[0])
         targets.append(data_tuple[1])
+    # Encode string labels into numbers
+    le = preprocessing.LabelEncoder()
+    encodes_targets = le.fit_transform(targets)
+
     # Split into train, validation and test data sets
-    img_train, img_left, img_train_label, img_label_left = train_test_split(images, targets, 
+    img_train, img_left, img_train_label, img_label_left = train_test_split(images, encodes_targets, 
                                         train_size=0.70, test_size=0.30, random_state=42)
     
     img_validation, img_test, img_validation_label, img_test_label = train_test_split(img_left, \
