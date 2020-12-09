@@ -29,16 +29,20 @@ def detect_face(name):
         # detect eyes in face region
         left_eye, right_eye = find_eyes(roi_color, roi_gray)
         if left_eye is None:
-            return None
+            continue
 
         # calculate angle and direction for rotation
         angle, direction = calculate_angle(left_eye, right_eye, roi_color)
+        if angle is None:
+            continue
+
         # rotate face region
         rotated = rotate(roi_color_copy, angle, direction)
+
         # crop face region
         cropped = crop_face(rotated)
         if cropped is None:
-            return None
+            continue
 
         # save result to file
         cv2.imwrite(name + '.face' + str(count) + '.jpg', cropped)
@@ -84,14 +88,14 @@ def find_face_regions(img, gray):
     # no faces detected in image
     while len(faces) == 0:
         # time out, failed to detect faces
-        if timeout > 20:
+        if timeout > 10:
             print("ERROR: timeout, failed to detect correct faces(s) in given image!")
             return None
 
         # adjust parameters and detect again
         else:
             timeout += 1
-            minNeighbors += 1
+            minNeighbors -= 1
             faces = face_cascade.detectMultiScale(gray, scaleFactor, minNeighbors)
 
     # draw rectangles around faces and show the result
@@ -114,10 +118,23 @@ def find_eyes(roi_color, roi_gray):
     timeout = 0
     eyes = eye_cascade.detectMultiScale(roi_gray, scaleFactor, minNeighbors)
 
+    # no eyes detected in given face region
+    while len(eyes) == 0:
+        # time out, failed to detect eyes
+        if timeout > 10:
+            print("ERROR: timeout, failed to detect correct eye(s) in given face region!")
+            return None, None
+
+        # adjust parameters and detect again
+        else:
+            timeout += 1
+            minNeighbors -= 1
+            eyes = eye_cascade.detectMultiScale(roi_gray, scaleFactor, minNeighbors)
+
     # more than 2 eyes detected in given face region
     while eyes.shape[0] > 2:
         # time out, failed to detect eyes
-        if timeout > 20:
+        if timeout > 10:
             print("ERROR: timeout, failed to detect correct eye(s) in given face region!")
             return None, None
 
@@ -130,7 +147,7 @@ def find_eyes(roi_color, roi_gray):
     # less than 2 eyes detected in given face region
     while eyes.shape[0] < 2:
         # time out, failed to detect eyes
-        if timeout > 20:
+        if timeout > 10:
             print("ERROR: timeout, failed to detect correct eye(s) in given face region!")
             return None, None
 
@@ -201,6 +218,9 @@ def calculate_angle(left_eye, right_eye, roi_color):
     # calculate rotation angle
     delta_x = right_eye_x - left_eye_x
     delta_y = right_eye_y - left_eye_y
+    if delta_x == 0:
+        print("ERROR: division by zero!")
+        return None, None
     angle = np.arctan(delta_y/delta_x)
     angle = (angle * 180) / np.pi
 
@@ -250,19 +270,25 @@ def crop_face(rotated):
 
 
 def test_detect_face():
-    # images with no face
-
-    # images with incomplete face
-    detect_face('detect_face/incomplete1.jpg')
-    detect_face('detect_face/incomplete2.jpg')
-    detect_face('detect_face/incomplete3.jpg')
-
-    # images with single face
-    detect_face('detect_face/single1.jpg')
-    detect_face('detect_face/single2.jpg')
-    detect_face('detect_face/single3.jpg')
+    # # images with no face
+    # detect_face('detect_face/no1.jpg')
+    # detect_face('detect_face/no2.jpg')
+    # detect_face('detect_face/no3.jpg')
+    #
+    # # images with incomplete face
+    # detect_face('detect_face/incomplete1.jpg')
+    # detect_face('detect_face/incomplete2.jpg')
+    # detect_face('detect_face/incomplete3.jpg')
+    #
+    # # images with single face
+    # detect_face('detect_face/single1.jpg')
+    # detect_face('detect_face/single2.jpg')
+    # detect_face('detect_face/single3.jpg')
 
     # images with multi faces
+    detect_face('detect_face/multi1.jpg')
+    detect_face('detect_face/multi2.jpg')
+    detect_face('detect_face/multi3.jpg')
 
 
 # main program
