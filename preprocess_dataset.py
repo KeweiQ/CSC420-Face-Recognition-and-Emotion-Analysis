@@ -78,6 +78,14 @@ def split_data(dataset_tuple_list):
     img_validation, img_test, img_validation_label, img_test_label = train_test_split(img_left, \
         img_label_left, train_size=0.50, test_size=0.50, random_state=42)
 
+    # Convert them all into numpy array
+    img_train = np.array(img_train)
+    img_train_label = np.array(img_train_label)
+    img_validation = np.array(img_validation)
+    img_validation_label = np.array(img_validation_label)
+    img_test = np.array(img_test)
+    img_test_label = np.array(img_test_label)
+    
     # Return the splitted datasets
     return img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label
 
