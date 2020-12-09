@@ -9,6 +9,7 @@ This file includes:
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report
 import numpy as np
+from matplotlib import pyplot as plt
 import preprocess_dataset
 
 
@@ -32,3 +33,15 @@ if __name__ == '__main__':
     validation_accuracy = np.average(np.array(
         [1 if validation_pred[i] == img_validation_label[i] else 0 for i in range(len(validation_pred))]
     ))
+    print("Validation accuracy: {}".format(validation_accuracy))
+
+    # Test the model
+    test_pred = mlp_clf.predict(img_test_reduced)
+    # Print classification report
+    print(classification_report(img_test_label, test_pred))
+
+    # Plot a gallery of 20 sample results
+    for i in range(20):
+        plt.imshow(img_test[i], cmap=plt.cm.gray)
+        plt.title("Predicted: {}\nTrue: {}".format(test_pred[i], img_test_label[i]))
+        plt.show()
