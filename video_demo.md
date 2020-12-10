@@ -29,7 +29,7 @@ Inspired by and modified from Eigenfaces
 - Finds a linear combination of features with the consideration of classes, so discriminative information will not be lost
 
 ### Neural Network
-- Early-stopping training: stops when the change of accuracy in the validation set between epochs is not seeing significant change, so as to prevent overfitting
+- CNN
 
 ## Proposed Experiments
 ### Capability Justification
