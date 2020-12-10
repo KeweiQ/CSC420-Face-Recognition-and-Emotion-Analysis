@@ -28,12 +28,15 @@ Inspired by and modified from Eigenfaces
 - A combination of Principal Component Analysis (PCA) and Linear Discriminant Analysis (LDA)
 - Finds a linear combination of features with the consideration of classes, so discriminative information will not be lost
 
-### Multi-layer Preception Neural Network
+### Neural Network
 - Early-stopping training: stops when the change of accuracy in the validation set between epochs is not seeing significant change, so as to prevent overfitting
 
 ## Proposed Experiments
 ### Capability Justification
 
-### Modification Test
+### Facial Extraction Algorithm Comparison
+How much benefit are we receiving by using Fisherfaces instead of Eigenfaces? 
+- Run the experiment respectively with Fisherfaces and Eigenfaces in the feature extraction step
+- Compare the accuracy, precision, recall, etc. to see the benefits in performance obtained by using Fisherface
 
 
