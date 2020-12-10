@@ -37,6 +37,6 @@ Inspired by and modified from Eigenfaces
 ### Facial Extraction Algorithm Comparison
 How much benefit are we receiving by using Fisherfaces instead of Eigenfaces? 
 - Run the experiment respectively with Fisherfaces and Eigenfaces in the feature extraction step
-- Compare the accuracy, precision, recall, etc. to see the benefits in performance obtained by using Fisherface
+- Compare the accuracy, precision, recall, etc. to see the benefits in performance obtained by using Fisherfaces
 
 
