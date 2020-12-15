@@ -6,6 +6,18 @@ from PIL import Image
 
 
 def detect_face(name, mode):
+    # print instructions
+    if mode == 'auto':
+        print('Auto detect mode selected.\nPlease be advised: If the result is satisfiable, '
+              'try manual mode and type in parameters to get better result.')
+    elif mode == 'manual':
+        print('Manual detect mode selected\nType s to set scaleFactor, type m to set minNeighbour, type c to confirm\n'
+              'Parameter usages:\nscaleFactor: smaller value increase both the chance of detection and the time cost.\n'
+              'minNeighbors: higher value results in less detections but with higher quality')
+    else:
+        print('ERROR: detect mode is not chosen')
+        return None
+
     # load image
     original = read_image(name)
     # make deep copy of the image
@@ -40,7 +52,7 @@ def detect_face(name, mode):
         rotated = rotate(roi_color_copy, angle, direction)
 
         # crop face region
-        cropped = crop_face(rotated)
+        cropped = crop_face(rotated, mode)
         if cropped is None:
             continue
 
@@ -86,17 +98,64 @@ def find_face_regions(img, gray, mode):
     faces = face_cascade.detectMultiScale(gray, scaleFactor, minNeighbors)
 
     # no faces detected in image
-    while len(faces) == 0:
-        # time out, failed to detect faces
-        if timeout > 10:
-            print("ERROR: timeout, failed to detect correct faces(s) in given image!")
-            return None
+    if mode == 'auto':
+        while len(faces) == 0:
+            # time out, failed to detect faces
+            if timeout > 10:
+                print("ERROR: timeout, failed to detect correct faces(s) in given image!")
+                return None
 
-        # adjust parameters and detect again
-        else:
-            timeout += 1
-            minNeighbors -= 1
-            faces = face_cascade.detectMultiScale(gray, scaleFactor, minNeighbors)
+            # adjust parameters and detect again
+            else:
+                timeout += 1
+                minNeighbors -= 1
+                faces = face_cascade.detectMultiScale(gray, scaleFactor, minNeighbors)
+
+    else:
+        while True:
+            # show current result
+            img_copy = copy.deepcopy(img)
+            for (x, y, w, h) in faces:
+                cv2.rectangle(img_copy, (x, y), (x + w, y + h), (0, 255, 0), 3)
+            show_image('current result', img_copy)
+
+            # let user chose what to do
+            print('Please choose an option:')
+            ipt = input()
+
+            # adjust parameters and detect again
+            if ipt == 's':
+                print('Please type the value you want to set for scaleFactor (bigger than 1):\nCurrent value:' + str(scaleFactor))
+                ipt = input()
+
+                if float(ipt) > 1:
+                    scaleFactor = float(ipt)
+                    print('New value: ' + str(ipt) + '\n')
+                    faces = face_cascade.detectMultiScale(gray, scaleFactor, minNeighbors)
+                else:
+                    print('Useless input, scaleFactor must bigger than 1!\n')
+
+            # adjust parameters and detect again
+            elif ipt == 'm':
+                print('Please type the value you want to set for minNeighbors (must be integer and bigger than or '
+                      'equals to 1):\nCurrent value:' + str(minNeighbors))
+                ipt = input()
+
+                if float(ipt) >= 1 and float(ipt) % 1 == 0:
+                    minNeighbors = int(ipt)
+                    print('New value: ' + str(ipt) + '\n')
+                    faces = face_cascade.detectMultiScale(gray, scaleFactor, minNeighbors)
+                else:
+                    print('Useless input, minNeighbors must be integer and bigger than or equals to 1!\n')
+
+            # finish detection
+            elif ipt == 'c':
+                print('Face detection finished\n')
+                break
+
+            # useless input
+            else:
+                print('Unknown option, please choose from \'s\', \'m\', \'c\'\n')
 
     # draw rectangles around faces and show the result
     for (x, y, w, h) in faces:
@@ -118,44 +177,92 @@ def find_eyes(roi_color, roi_gray, mode):
     timeout = 0
     eyes = eye_cascade.detectMultiScale(roi_gray, scaleFactor, minNeighbors)
 
-    # no eyes detected in given face region
-    while len(eyes) == 0:
-        # time out, failed to detect eyes
-        if timeout > 10:
-            print("ERROR: timeout, failed to detect correct eye(s) in given face region!")
-            return None, None
+    if mode == 'auto':
+        # no eyes detected in given face region
+        while len(eyes) == 0:
+            # time out, failed to detect eyes
+            if timeout > 10:
+                print("ERROR: timeout, failed to detect correct eye(s) in given face region!")
+                return None, None
 
-        # adjust parameters and detect again
-        else:
-            timeout += 1
-            minNeighbors -= 1
-            eyes = eye_cascade.detectMultiScale(roi_gray, scaleFactor, minNeighbors)
+            # adjust parameters and detect again
+            else:
+                timeout += 1
+                minNeighbors -= 1
+                eyes = eye_cascade.detectMultiScale(roi_gray, scaleFactor, minNeighbors)
 
-    # more than 2 eyes detected in given face region
-    while eyes.shape[0] > 2:
-        # time out, failed to detect eyes
-        if timeout > 10:
-            print("ERROR: timeout, failed to detect correct eye(s) in given face region!")
-            return None, None
+        # more than 2 eyes detected in given face region
+        while eyes.shape[0] > 2:
+            # time out, failed to detect eyes
+            if timeout > 10:
+                print("ERROR: timeout, failed to detect correct eye(s) in given face region!")
+                return None, None
 
-        # adjust parameters and detect again
-        else:
-            timeout += 1
-            minNeighbors += 1
-            eyes = eye_cascade.detectMultiScale(roi_gray, scaleFactor, minNeighbors)
+            # adjust parameters and detect again
+            else:
+                timeout += 1
+                minNeighbors += 1
+                eyes = eye_cascade.detectMultiScale(roi_gray, scaleFactor, minNeighbors)
 
-    # less than 2 eyes detected in given face region
-    while eyes.shape[0] < 2:
-        # time out, failed to detect eyes
-        if timeout > 10:
-            print("ERROR: timeout, failed to detect correct eye(s) in given face region!")
-            return None, None
+        # less than 2 eyes detected in given face region
+        while eyes.shape[0] < 2:
+            # time out, failed to detect eyes
+            if timeout > 10:
+                print("ERROR: timeout, failed to detect correct eye(s) in given face region!")
+                return None, None
 
-        # adjust parameters and detect again
-        else:
-            timeout += 1
-            minNeighbors -= 1
-            eyes = eye_cascade.detectMultiScale(roi_gray, scaleFactor, minNeighbors)
+            # adjust parameters and detect again
+            else:
+                timeout += 1
+                minNeighbors -= 1
+                eyes = eye_cascade.detectMultiScale(roi_gray, scaleFactor, minNeighbors)
+
+    else:
+        while True:
+            # show current result
+            img_copy = copy.deepcopy(roi_color)
+            for (x, y, w, h) in eyes:
+                cv2.rectangle(img_copy, (x, y), (x + w, y + h), (0, 0, 255), 3)
+            show_image('current result', img_copy)
+
+            # let user chose what to do
+            print('Please choose an option:')
+            ipt = input()
+
+            # adjust parameters and detect again
+            if ipt == 's':
+                print('Please type the value you want to set for scaleFactor (bigger than 1):\nCurrent value:' + str(
+                    scaleFactor))
+                ipt = input()
+
+                if float(ipt) > 1:
+                    scaleFactor = float(ipt)
+                    print('New value: ' + str(ipt) + '\n')
+                    eyes = eye_cascade.detectMultiScale(roi_gray, scaleFactor, minNeighbors)
+                else:
+                    print('Useless input, scaleFactor must bigger than 1!\n')
+
+            # adjust parameters and detect again
+            elif ipt == 'm':
+                print('Please type the value you want to set for minNeighbors (must be integer and bigger than or '
+                      'equals to 1):\nCurrent value:' + str(minNeighbors))
+                ipt = input()
+
+                if float(ipt) >= 1 and float(ipt) % 1 == 0:
+                    minNeighbors = int(ipt)
+                    print('New value: ' + str(ipt) + '\n')
+                    eyes = eye_cascade.detectMultiScale(roi_gray, scaleFactor, minNeighbors)
+                else:
+                    print('Useless input, minNeighbors must be integer and bigger than or equals to 1!\n')
+
+            # finish detection
+            elif ipt == 'c':
+                print('Eye detection finished\n')
+                break
+
+            # useless input
+            else:
+                print('Unknown option, please choose from \'s\', \'m\', \'c\'\n')
 
     # get region of detected eyes
     index = 0
@@ -247,14 +354,14 @@ def rotate(img, angle, direction):
     return rotated
 
 
-def crop_face(rotated):
+def crop_face(rotated, mode):
     # deep copy of rotated image (to show detected face)
     rotated_copy = copy.deepcopy(rotated)
     # convert the image into grayscale
     rotated_gray = cv2.cvtColor(rotated, cv2.COLOR_BGR2GRAY)
 
     # detect face in the image (should be 1)
-    face = find_face_regions(rotated_copy, rotated_gray)
+    face = find_face_regions(rotated_copy, rotated_gray, mode)
     # error checking
     if face is None:
         return None
@@ -286,9 +393,9 @@ def test_detect_face():
     # detect_face('detect_face/single3.jpg', 'auto')
 
     # images with multi faces
-    detect_face('detect_face/multi1.jpg', 'auto')
-    detect_face('detect_face/multi2.jpg', 'auto')
-    detect_face('detect_face/multi3.jpg', 'auto')
+    detect_face('detect_face/multi1.jpg', 'manual')
+    # detect_face('detect_face/multi2.jpg', 'auto')
+    # detect_face('detect_face/multi3.jpg', 'auto')
 
 
 # main program
