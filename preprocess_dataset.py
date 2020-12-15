@@ -67,6 +67,7 @@ def split_data(dataset_tuple_list):
     for data_tuple in dataset_tuple_list:
         images.append(data_tuple[0])
         targets.append(data_tuple[1])
+
     # Encode string labels into numbers
     le = preprocessing.LabelEncoder()
     encodes_targets = le.fit_transform(targets)
@@ -86,8 +87,9 @@ def split_data(dataset_tuple_list):
     img_test = np.array(img_test)
     img_test_label = np.array(img_test_label)
     
-    # Return the splitted datasets
-    return img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label
+    # Return the splitted datasets and also the le for further transforming back labels in the purpose 
+    # of plotting
+    return img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label, le
 
 
 # Main program
