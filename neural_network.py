@@ -6,10 +6,18 @@ This file includes:
 """
 
 
-from sklearn.neural_network import MLPClassifier
+# from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report
 import numpy as np
 from matplotlib import pyplot as plt
+
+import keras
+from keras.models import Sequential,Input,Model
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+from keras.layers.normalization import BatchNormalization
+from keras.layers.advanced_activations import LeakyReLU
+
 import preprocess_dataset
 
 
@@ -25,18 +33,47 @@ if __name__ == '__main__':
     img_validation_reduced = img_validation
     img_test_reduced = img_test
 
-    # Train the neural network
-    mlp_clf = MLPClassifier(solver='lbfgs', early_stopping=True).fit(img_train_reduced, img_train_label)
+    # Construct the convolutional neural network
+    cnn_clf = Sequential()
+    # The first layer
+    cnn_clf.add(Conv2D(32, kernel_size=(3, 3), activation='linear', input_shape=(28, 28, 1), padding='same'))
+    cnn_clf.add(LeakyReLU(alpha=0.1))
+    cnn_clf.add(MaxPooling2D((3, 3), padding='same'))
+    cnn_clf.add(Dropout(0.25))
+    # The second layer
+    cnn_clf.add(Conv2D(64, kernel_size=(3, 3), activation='linear', padding='same'))
+    cnn_clf.add(LeakyReLU(alpha=0.1))
+    cnn_clf.add(MaxPooling2D((3, 3), padding='same'))
+    cnn_clf.add(Dropout(0.25))
+    # The third layer
+    cnn_clf.add(Conv2D(128, kernel_size=(3, 3), activation='linear', padding='same'))
+    cnn_clf.add(LeakyReLU(alpha=0.1))
+    cnn_clf.add(MaxPooling2D((3, 3), padding='same'))
+    cnn_clf.add(Dropout(0.4))
+    # The first dense layer
+    cnn_clf.add(Flatten())
+    cnn_clf.add(Dense(128, activation='linear'))
+    # The second dense layer to complete categorization
+    cnn_clf.add(LeakyReLU(alpha=0.1))
+    cnn_clf.add(Dropout(0.3))
+    cnn_clf.add(Dense(7, activation='softmax'))
 
-    # Predict the validation set to check model accuracy
-    validation_pred = mlp_clf.predict(img_validation_reduced)
-    validation_accuracy = np.average(np.array(
-        [1 if validation_pred[i] == img_validation_label[i] else 0 for i in range(len(validation_pred))]
-    ))
-    print("Validation accuracy: {}".format(validation_accuracy))
+    # Compile the neural network model
+    cnn_clf.compile(loss=keras.losses.categorical_crossentropy,
+                    optimizer=keras.optimizers.Adam(),
+                    metrics=['accuracy']
+                    )
+
+    # Train the neural network model
+    cnn_train = cnn_clf.fit(img_train_reduced, img_train_label,
+                            batch_size=256,
+                            epochs=20,
+                            verbose=1,
+                            validation_data=(img_validation_reduced, img_validation_label)
+                            )
 
     # Test the model
-    test_pred = mlp_clf.predict(img_test_reduced)
+    test_pred = cnn_clf.predict(img_test_reduced)
     # Print classification report
     print(classification_report(img_test_label, test_pred))
 
