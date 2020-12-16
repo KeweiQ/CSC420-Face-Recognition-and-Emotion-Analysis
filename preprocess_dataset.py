@@ -54,12 +54,14 @@ def split_data(dataset_tuple_list):
                           emotional image and a corresponding label generated from load_dataset().
 
     Returns:
-        img_train:                  the array stores the training images
-        img_train_label:            the array stores the corresponding target for the training images
-        img_validation:             the array stores the validation images
-        img_validation_label:       the array stores the corresponding target for the validation images
-        img_test:                   the array stores the test images
-        img_test_label:             the array stores the corresponding target for the test images
+        img_train:              the array stores the training images
+        img_train_label:        the array stores the corresponding target for the training images
+        img_validation:         the array stores the validation images
+        img_validation_label:   the array stores the corresponding target for the validation images
+        img_test:               the array stores the test images
+        img_test_label:         the array stores the corresponding target for the test images
+        le:                     a labelEncoder instance for further reverse transform back number 
+                                labels into string.
     """
     # Get images and target labels from the input dataset_tuple_list
     images = []
@@ -67,6 +69,7 @@ def split_data(dataset_tuple_list):
     for data_tuple in dataset_tuple_list:
         images.append(data_tuple[0])
         targets.append(data_tuple[1])
+
     # Encode string labels into numbers
     le = preprocessing.LabelEncoder()
     encodes_targets = le.fit_transform(targets)
@@ -87,7 +90,7 @@ def split_data(dataset_tuple_list):
     img_test_label = np.array(img_test_label)
     
     # Return the splitted datasets
-    return img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label
+    return img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label, le
 
 
 # Main program
