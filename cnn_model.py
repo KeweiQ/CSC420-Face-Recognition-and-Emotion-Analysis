@@ -14,7 +14,7 @@ from matplotlib import pyplot as plt
 import keras
 from keras.models import Sequential,Input,Model
 from keras.layers import Dense, Dropout, Flatten
-from keras.layers import Conv2D, MaxPooling2D
+from keras.layers import Conv1D, MaxPooling1D
 from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import LeakyReLU
 
@@ -28,32 +28,29 @@ if __name__ == '__main__':
         preprocess_dataset.split_data(dataset_list)
 
     # Perform face detection dimensionality reduction on the datasets
-    # TODO: Implement this
-    fisher_train, fisher_test, fisher_validation = fe.fisherfaces(img_train, img_test, img_validation, img_train_label, le)
-    img_train_reduced = fisher_train
-    img_validation_reduced = fisher_validation
-    img_test_reduced = fisher_test
+    img_train_reduced, img_test_reduced, img_validation_reduced = \
+        fe.fisherfaces(img_train, img_test, img_validation, img_train_label, le)
 
     # Construct the convolutional neural network
     cnn_clf = Sequential()
     # The first layer
-    cnn_clf.add(Conv2D(32, kernel_size=(3, 3), activation='linear', input_shape=(28, 28, 1), padding='same'))
+    cnn_clf.add(Conv1D(32, kernel_size=3, activation='relu', input_shape=(1, 6), padding='same'))
     cnn_clf.add(LeakyReLU(alpha=0.1))
-    cnn_clf.add(MaxPooling2D((3, 3), padding='same'))
+    cnn_clf.add(MaxPooling1D(3, padding='same'))
     cnn_clf.add(Dropout(0.25))
     # The second layer
-    cnn_clf.add(Conv2D(64, kernel_size=(3, 3), activation='linear', padding='same'))
+    cnn_clf.add(Conv1D(64, kernel_size=3, activation='relu', padding='same'))
     cnn_clf.add(LeakyReLU(alpha=0.1))
-    cnn_clf.add(MaxPooling2D((3, 3), padding='same'))
+    cnn_clf.add(MaxPooling1D(3, padding='same'))
     cnn_clf.add(Dropout(0.25))
     # The third layer
-    cnn_clf.add(Conv2D(128, kernel_size=(3, 3), activation='linear', padding='same'))
+    cnn_clf.add(Conv1D(128, kernel_size=3, activation='relu', padding='same'))
     cnn_clf.add(LeakyReLU(alpha=0.1))
-    cnn_clf.add(MaxPooling2D((3, 3), padding='same'))
+    cnn_clf.add(MaxPooling1D(3, padding='same'))
     cnn_clf.add(Dropout(0.4))
     # The first dense layer
     cnn_clf.add(Flatten())
-    cnn_clf.add(Dense(128, activation='linear'))
+    cnn_clf.add(Dense(128, activation='relu'))
     # The second dense layer to complete categorization
     cnn_clf.add(LeakyReLU(alpha=0.1))
     cnn_clf.add(Dropout(0.3))
