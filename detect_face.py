@@ -56,8 +56,11 @@ def detect_face(name, mode):
         if cropped is None:
             continue
 
+        # resize image to 48 x 48
+        resized = resize_image(cropped, 48  , 48)
+
         # save result to file
-        cv2.imwrite(name + '.face' + str(count) + '.jpg', cropped)
+        cv2.imwrite(name + '.face' + str(count) + '.jpg', resized)
         count += 1
 
 
@@ -376,6 +379,11 @@ def crop_face(rotated, mode):
     return cropped
 
 
+def resize_image(img, w, h):
+    resized = cv2.resize(img, (w, h))
+    return resized
+
+
 def test_detect_face():
     # # images with no face
     # detect_face('detect_face/no1.jpg', 'auto')
@@ -388,12 +396,12 @@ def test_detect_face():
     # detect_face('detect_face/incomplete3.jpg', 'auto')
     #
     # # images with single face
-    # detect_face('detect_face/single1.jpg', 'auto')
-    # detect_face('detect_face/single2.jpg', 'auto')
-    # detect_face('detect_face/single3.jpg', 'auto')
+    detect_face('detect_face/single1.jpg', 'auto')
+    detect_face('detect_face/single2.jpg', 'auto')
+    detect_face('detect_face/single3.jpg', 'auto')
 
     # images with multi faces
-    detect_face('detect_face/multi1.jpg', 'manual')
+    # detect_face('detect_face/multi1.jpg', 'manual')
     # detect_face('detect_face/multi2.jpg', 'auto')
     # detect_face('detect_face/multi3.jpg', 'auto')
 
