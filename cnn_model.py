@@ -64,7 +64,7 @@ if __name__ == '__main__':
     # The first dense layer
     cnn_clf.add(Flatten())
     cnn_clf.add(Dense(128, activation='relu'))
-    
+
     # The second dense layer to complete categorization
     cnn_clf.add(LeakyReLU(alpha=0.1))
     cnn_clf.add(Dropout(0.3))
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     print(classification_report(
         np.argmax(img_test_label, axis=1),
         np.argmax(test_pred, axis=1),
-        target_names=['anger', 'contempt', 'disgust', 'fear', 'happy', 'sadness', 'surprise']
+        target_names=['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
         )
     )
 
