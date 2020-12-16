@@ -8,7 +8,7 @@ This file includes:
 # from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report
 import numpy as np
-from feature_extraction_Eigenfaces_Fisherfaces.py import fisherfaces
+import feature_extraction_Eigenfaces_Fisherfaces as fe
 from matplotlib import pyplot as plt
 
 import keras
@@ -23,13 +23,13 @@ import preprocess_dataset
 
 if __name__ == '__main__':
     # Load and split the dataset
-    dataset_list = preprocess_dataset.load_dataset('./CK+48')
+    dataset_list = preprocess_dataset.load_dataset('CK+48')
     img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label, le = \
         preprocess_dataset.split_data(dataset_list)
 
     # Perform face detection dimensionality reduction on the datasets
     # TODO: Implement this
-    fisher_train, fisher_test, fisher_validation = fe.fisherfaces(img_train, img_test, img_validation, img_train_label)
+    fisher_train, fisher_test, fisher_validation = fe.fisherfaces(img_train, img_test, img_validation, img_train_label, le)
     img_train_reduced = fisher_train
     img_validation_reduced = fisher_validation
     img_test_reduced = fisher_test

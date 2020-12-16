@@ -46,13 +46,14 @@ def constructRowMatrix(img_list):
     return row_matrix
 
 
-def plot_pca(pca_train, img_label_list):
+def plot_pca(pca_train, img_label_list, le):
     """
     A function to visualize the projected result using Principal component analysis (PCA)
     
     Args:
         pca_train:       the already transformed train data images.
         img_label_list:  an input list of corresponding image labels.
+        le:              the labelEncoder in preprocess_dataset.
     Returns:
         None. (But generate visualization plot)
     """  
@@ -94,13 +95,14 @@ def plot_pca(pca_train, img_label_list):
     plt.show()
 
 
-def plot_step_lda(fisherfaces_train, img_label_list):
+def plot_step_lda(fisherfaces_train, img_label_list, le):
     """
     A function to visualize the projected result using Linear Discriminant analysis (LDA)
     
     Args:
         fisherfaces_train: the already transformed train data images.
         img_label_list:    an input list of corresponding image labels.
+        le:              the labelEncoder in preprocess_dataset.
     Returns:
         None. (But generate visualization plot)
     """  
@@ -142,8 +144,8 @@ def plot_step_lda(fisherfaces_train, img_label_list):
     plt.show()
 
 
-def principalComponentAnalysis(train, test, validation, img_label_list, num_components=0, show_original=False, \
-                                                            show_projected=False, show_eigenfaces=False):
+def principalComponentAnalysis(train, test, validation, img_label_list, le, num_components=0, \
+    show_original=False, show_projected=False, show_eigenfaces=False):
     """
     A function to extract a feature vector using Principal component analysis (PCA)
     
@@ -152,6 +154,7 @@ def principalComponentAnalysis(train, test, validation, img_label_list, num_comp
         test:            an input test set for list of images in grayscale.
         validation:      an input validation set for list of images in grayscale.
         img_label_list:  an input list of corresponding image labels.
+        le:              the labelEncoder in preprocess_dataset.
         num_components:  the number of components to keep, by default the value is 0;
                          Notes: 0 < num_components <= min(n_samples, n_features).
         show_original:   the input parameter to indicate whether we want to plot the original images list.
@@ -206,14 +209,14 @@ def principalComponentAnalysis(train, test, validation, img_label_list, num_comp
         plt.show()
 
     # Plot the projected result onto the first two linear discriminants
-    if show_projected: plot_pca(pca_train, img_label_list)
+    if show_projected: plot_pca(pca_train, img_label_list, le)
 
     # Return the result eigenfaces feature vector for both train and test sets
     return pca_train, pca_test, pca_validation, pca
 
 
-def linearDiscriminantAnalysis(pca_train, pca_test, pca_validation, pca, img_label_list, class_components, \
-                                    show_fisherfaces=False, show_projected=False, show_eigenfaces=False):
+def linearDiscriminantAnalysis(pca_train, pca_test, pca_validation, pca, img_label_list, class_components, le, \
+    show_fisherfaces=False, show_projected=False, show_eigenfaces=False):
     """
     A function to extract a feature vector using Principal component analysis (PCA)
     
@@ -224,6 +227,7 @@ def linearDiscriminantAnalysis(pca_train, pca_test, pca_validation, pca, img_lab
         pca:               the already trained pca instance.
         img_label_list:    an input list of corresponding image labels.
         class_components:  the number of components to keep, by default the value is 0.   
+        le:                the labelEncoder in preprocess_dataset.
         show_original:     the input parameter to indicate whether we want to plot the original images list.
         show_fisherfaces:  the input parameter to indicate whether we want to plot the fisherfaces.
         show_projected:    the input parameter to indicate whether we want to plot the projected analysis result.
@@ -241,7 +245,7 @@ def linearDiscriminantAnalysis(pca_train, pca_test, pca_validation, pca, img_lab
     fisherfaces_validation = lda.transform(pca_validation)
 
     # Plot the projected result onto the first two linear discriminants
-    if show_projected: plot_step_lda(fisherfaces_train, img_label_list)
+    if show_projected: plot_step_lda(fisherfaces_train, img_label_list, le)
 
     # Plot the fisherfaces images
     if show_fisherfaces:
@@ -260,7 +264,7 @@ def linearDiscriminantAnalysis(pca_train, pca_test, pca_validation, pca, img_lab
     return fisherfaces_train, fisherfaces_test, fisherfaces_validation  
 
 
-def fisherfaces(train, test, validation, img_label_list):
+def fisherfaces(train, test, validation, img_label_list, le):
     """
     A function to extract a feature vector using Principal component analysis (PCA)
     
@@ -269,6 +273,7 @@ def fisherfaces(train, test, validation, img_label_list):
         test:               an input test set for list of images in grayscale.
         validation:         an input validation set for list of images in grayscale.
         img_label_list:     an input list of corresponding image labels.
+        le:                 the labelEncoder in preprocess_dataset.
     Returns:
         fisherfaces_train:  fisherfaces feature vector for the train set.
         fisherfaces_test:  fisherfaces feature vector for the test set.
@@ -280,11 +285,11 @@ def fisherfaces(train, test, validation, img_label_list):
     # We chain the PCA and LDA to get the result of fisherfaces
     # First apply PCA algorithm on the datasets: train and test
     pca_train, pca_test, pca_validation, pca = principalComponentAnalysis(train, test, validation, \
-        img_train_label, num_components=625, show_original=True, show_projected=True, show_eigenfaces=True)
+        img_label_list, le, num_components=625, show_original=True, show_projected=True, show_eigenfaces=True)
 
     # Use the result from PCA to get the fisherfaces result vectors for train and test datasets
     fisherfaces_train, fisherfaces_test, fisherfaces_validation = linearDiscriminantAnalysis(pca_train, \
-        pca_test, pca_validation, pca, img_train_label, 7, show_fisherfaces=True, show_projected=True, \
+        pca_test, pca_validation, pca, img_label_list, 7, le, show_fisherfaces=True, show_projected=True, \
             show_eigenfaces=True)
 
     # Return the fisherfaces_train and fisherfaces_test vectors
@@ -304,11 +309,11 @@ if __name__ == '__main__':
 
     # Eigenfaces: Get the pca_train and pca_test feature vectors for further training and predicting
     pca_train, pca_test, pca_validation = principalComponentAnalysis(img_train, img_test, img_validation, \
-            img_train_label, num_components=625)[:2]
+            img_train_label, le, num_components=625)[:3]
 
     # Fisherfaces: Get the fisherfaces_train and fisherfaces_test feature vectors for further training and predicting
     fisher_train, fisher_test, fisher_validation = fisherfaces(img_train, img_test, img_validation, \
-            img_train_label)
+            img_train_label, le)
 
     # Train a nsimple neural network to test the correctness on the implemented algorithm
     print("\nFitting the classifier to the training set\n")
