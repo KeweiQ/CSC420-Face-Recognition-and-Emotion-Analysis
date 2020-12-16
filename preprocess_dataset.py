@@ -102,5 +102,5 @@ if __name__ == '__main__':
     # for data_tuple in dataset_tuple_list:
     #     print(data_tuple)
 
-    img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label = \
+    img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label, le = \
         split_data(dataset_tuple_list)
