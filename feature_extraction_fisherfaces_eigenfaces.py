@@ -169,11 +169,16 @@ def principalComponentAnalysis(train, test, validation, img_label_list, le, num_
     if show_original:
         i = 0
         eigen_plot = train[:20]
+        plt.figure(figsize=(8, 6))
         for img in eigen_plot:
             i += 1
             plt.subplot(4, 5, i)
-            plt.axis('off')
+            # plt.axis('off')
+            plt.xticks([])
+            plt.yticks([])
+            plt.grid(False)
             plt.imshow(img, cmap='gray')
+            plt.xlabel(le.inverse_transform([img_label_list[i - 1]])[0])
         plt.show()
 
     # Get num_elements, h and w of each signle image

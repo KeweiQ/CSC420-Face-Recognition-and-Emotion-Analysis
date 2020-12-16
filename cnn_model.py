@@ -8,7 +8,7 @@ This file includes:
 # from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report
 import numpy as np
-import feature_extraction_Eigenfaces_Fisherfaces as fe
+import feature_extraction_fisherfaces_eigenfaces as fe
 from matplotlib import pyplot as plt
 
 import keras
@@ -80,6 +80,6 @@ if __name__ == '__main__':
 
     # Plot a gallery of 20 sample results
     for i in range(20):
-        plt.imshow(img_test[i], cmap=plt.cm.gray)
+        plt.imshow(img_test[i], cmap='gray')
         plt.title("Predicted: {}\nTrue: {}".format(test_pred[i], img_test_label[i]))
         plt.show()
