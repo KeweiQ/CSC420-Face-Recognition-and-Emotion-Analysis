@@ -84,7 +84,7 @@ if __name__ == '__main__':
     # Test the model
     test_pred = cnn_clf.predict(img_test_reduced)
     # Print classification report
-    print(classification_report(img_test_label, test_pred))
+    print(classification_report(np.argmax(img_test_label, axis=1), np.argmax(test_pred, axis=1)))
 
     # Plot a gallery of 20 sample results
     for i in range(20):
