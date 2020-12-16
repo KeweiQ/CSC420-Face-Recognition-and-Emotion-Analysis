@@ -42,24 +42,29 @@ if __name__ == '__main__':
 
     # Construct the convolutional neural network
     cnn_clf = Sequential()
+
     # The first layer
     cnn_clf.add(Conv1D(32, kernel_size=3, activation='relu', input_shape=(1, 6), padding='same'))
     cnn_clf.add(LeakyReLU(alpha=0.1))
     cnn_clf.add(MaxPooling1D(3, padding='same'))
     cnn_clf.add(Dropout(0.25))
+
     # The second layer
     cnn_clf.add(Conv1D(64, kernel_size=3, activation='relu', padding='same'))
     cnn_clf.add(LeakyReLU(alpha=0.1))
     cnn_clf.add(MaxPooling1D(3, padding='same'))
     cnn_clf.add(Dropout(0.25))
+
     # The third layer
     cnn_clf.add(Conv1D(128, kernel_size=3, activation='relu', padding='same'))
     cnn_clf.add(LeakyReLU(alpha=0.1))
     cnn_clf.add(MaxPooling1D(3, padding='same'))
     cnn_clf.add(Dropout(0.4))
+
     # The first dense layer
     cnn_clf.add(Flatten())
     cnn_clf.add(Dense(128, activation='relu'))
+    
     # The second dense layer to complete categorization
     cnn_clf.add(LeakyReLU(alpha=0.1))
     cnn_clf.add(Dropout(0.3))
@@ -84,10 +89,15 @@ if __name__ == '__main__':
     # Test the model
     test_pred = cnn_clf.predict(img_test_reduced)
     # Print classification report
-    print(classification_report(np.argmax(img_test_label, axis=1), np.argmax(test_pred, axis=1)))
+    print(classification_report(
+        np.argmax(img_test_label, axis=1),
+        np.argmax(test_pred, axis=1),
+        target_names=['anger', 'contempt', 'disgust', 'fear', 'happy', 'sadness', 'surprise']
+        )
+    )
 
-    # Plot a gallery of 20 sample results
-    for i in range(20):
-        plt.imshow(img_test[i], cmap='gray')
-        plt.title("Predicted: {}\nTrue: {}".format(test_pred[i], img_test_label[i]))
-        plt.show()
+    # # Plot a gallery of 20 sample results
+    # for i in range(20):
+    #     plt.imshow(img_test[i], cmap='gray')
+    #     plt.title("Predicted: {}\nTrue: {}".format(test_pred[i], img_test_label[i]))
+    #     plt.show()
