@@ -5,15 +5,14 @@ This file includes:
 """
 
 
-
 import keras
 import numpy as np
 import preprocess_dataset
-import feature_extraction_fisherfaces_eigenfaces as fe
+import feature_extraction_final as fe
 
 from matplotlib import pyplot as plt
 from keras.utils import to_categorical
-from keras.models import Sequential,Input,Model
+from keras.models import Sequential, Input, Model
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv1D, MaxPooling1D
 from sklearn.metrics import classification_report

@@ -4,11 +4,11 @@ system
 '''
 
 
-import train as train
+import build_model as train
 import evaluation as evaluation
 import preprocess_dataset as pd
-import construct_model as cm
-import feature_extraction_fisherfaces_eigenfaces as fe
+import construct_model_old as cm
+import feature_extraction_final as fe
 
 
 
