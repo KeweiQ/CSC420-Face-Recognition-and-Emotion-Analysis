@@ -8,7 +8,6 @@ import face_detection as fd
 import feature_extraction as fe
 import model_construction as mc
 import model_evaluation as me
-import model_construction_old as mco
 
 
 def main():

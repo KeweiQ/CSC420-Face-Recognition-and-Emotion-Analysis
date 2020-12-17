@@ -43,8 +43,12 @@ def evaluate_model(model_trained, model_type, test, test_label, algorithm=None):
 
             # Use the model to predict
             test_pred = model_trained.predict(test)
+
             # Print classification report
-            print(classification_report(np.argmax(test_label_hotcoder, axis=1), np.argmax(test_pred, axis=1)))
+            print('CNN MSE:', mean_squared_error(np.argmax(test_label_hotcoder, axis=1), np.argmax(test_pred, axis=1)), '\n')
+            print('CNN confusion matrix:\n', confusion_matrix(np.argmax(test_label_hotcoder, axis=1), np.argmax(test_pred, axis=1)), '\n')
+            print('CNN classification report:\n',
+                  classification_report(np.argmax(test_label_hotcoder, axis=1), np.argmax(test_pred, axis=1)), '\n')
 
         elif algorithm == 'fisherfaces':
 
@@ -57,7 +61,10 @@ def evaluate_model(model_trained, model_type, test, test_label, algorithm=None):
             # Use the model to predict
             test_pred = model_trained.predict(test)
             # Print classification report
-            print(classification_report(np.argmax(test_label_hotcoder, axis=1), np.argmax(test_pred, axis=1)))
+            print('CNN MSE:', mean_squared_error(np.argmax(test_label_hotcoder, axis=1), np.argmax(test_pred, axis=1)), '\n')
+            print('CNN confusion matrix:\n', confusion_matrix(np.argmax(test_label_hotcoder, axis=1), np.argmax(test_pred, axis=1)), '\n')
+            print('CNN classification report:\n',
+                  classification_report(np.argmax(test_label_hotcoder, axis=1), np.argmax(test_pred, axis=1)), '\n')
 
         else:
             print("ERROR: invalid algorithm for CNN!")
@@ -70,9 +77,9 @@ def evaluate_model(model_trained, model_type, test, test_label, algorithm=None):
         plot_ROC(test_label, predict_score)
 
         # print other prediction metrics
-        print('SVM MSE:', mean_squared_error(test_label, grid_predictions))
-        print('SVM confusion matrix:\n', confusion_matrix(test_label, grid_predictions))
-        print('SVM classification report:\n', classification_report(test_label, grid_predictions))
+        print('SVM MSE:', mean_squared_error(test_label, grid_predictions), '\n')
+        print('SVM confusion matrix:\n', confusion_matrix(test_label, grid_predictions), '\n')
+        print('SVM classification report:\n', classification_report(test_label, grid_predictions), '\n')
 
     elif model_type == 'adaboost':
         # get predictions on test data and plot roc curve
@@ -81,9 +88,9 @@ def evaluate_model(model_trained, model_type, test, test_label, algorithm=None):
         plot_ROC(test_label, predict_score)
 
         # print other prediction metrics
-        print('AdaBoost MSE: ', mean_squared_error(test_label, grid_predictions))
-        print('AdaBoost confusion matrix:\n', confusion_matrix(test_label, grid_predictions))
-        print('AdaBoost classification report:\n', classification_report(test_label, grid_predictions))
+        print('AdaBoost MSE: ', mean_squared_error(test_label, grid_predictions), '\n')
+        print('AdaBoost confusion matrix:\n', confusion_matrix(test_label, grid_predictions), '\n')
+        print('AdaBoost classification report:\n', classification_report(test_label, grid_predictions), '\n')
 
     elif model_type == 'mlp':
         # get predictions on test data and plot roc curve
@@ -93,14 +100,15 @@ def evaluate_model(model_trained, model_type, test, test_label, algorithm=None):
         plot_ROC(test_label, predict_score)
 
         # print other prediction metrics
-        print('MLP test accuracy: ', accuracy_score(test_label, grid_predictions))
-        print('MLP MSE: ', mean_squared_error(test_label, grid_predictions))
-        print('MLP confusion matrix:\n', confusion_matrix(test_label, grid_predictions))
-        print('MLP classification report:\n', classification_report(test_label, grid_predictions))
+        print('MLP test accuracy: ', accuracy_score(test_label, grid_predictions), '\n')
+        print('MLP MSE: ', mean_squared_error(test_label, grid_predictions), '\n')
+        print('MLP confusion matrix:\n', confusion_matrix(test_label, grid_predictions), '\n')
+        print('MLP classification report:\n', classification_report(test_label, grid_predictions), '\n')
 
     else:
         print("ERROR: invalid model type!")
         return None
+
 
 def plot_ROC(test_labels, grid_predictions):
     # need to fix bug
