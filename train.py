@@ -41,7 +41,7 @@ def train_model(model, model_kind, train, train_label, validation, validation_la
             # Train the neural network model
             model.fit(train_adjust, train_label_hotcoder,
                     batch_size=256,
-                    epochs=20,
+                    epochs=100,
                     verbose=1,
                     validation_data=(validation_adjust, validation_label_hotcoder)
                     )
@@ -58,7 +58,7 @@ def train_model(model, model_kind, train, train_label, validation, validation_la
             # Train the neural network model
             model.fit(train, train_label_hotcoder,
                         batch_size=256,
-                        epochs=20,
+                        epochs=100,
                         verbose=1,
                         validation_data=(validation, validation_label_hotcoder)
                         )
