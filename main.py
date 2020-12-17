@@ -33,14 +33,23 @@ def main():
     """
     # Give a prompt for user to specify their wanted model
     model_kind = input("Please select a kind of model from the following: 'cnn', 'svm', 'adaboost':\n")
+    while model_kind not in ['cnn', 'svm', 'adaboost']:
+        print("Your input is not correct, please try again:\n")
+        model_kind = input("Please select a kind of model from the following: 'cnn', 'svm', 'adaboost':\n")
     print(f"You entered {model_kind}\n")
 
     # Give a prompt for user to specify their wanted dataset
     dataset = input("Please select a dataset that you want to perform from the following: 'CK+48', 'fer2013'.\n")
+    while dataset not in ['CK+48', 'fer2013']:
+        print("Your input is not correct, please try again:\n")
+        dataset = input("Please select a dataset that you want to perform from the following: 'CK+48', 'fer2013'.\n")
     print(f"You entered {dataset}\n")
 
     # Give a prompt for user to specify their wanted feature extraction algorithm
     algorithm = input("Please select an feature extraction algorithm that you want to use from the following: 'eigenfaces', 'fisherfaces'.\n")
+    while algorithm not in ['eigenfaces', 'fisherfaces']:
+        print("Your input is not correct, please try again:\n")
+        algorithm = input("Please select an feature extraction algorithm that you want to use from the following: 'eigenfaces', 'fisherfaces'.\n")
     print(f"You entered {algorithm}")
 
     # Load the dataset into a shuffled list of tuples
