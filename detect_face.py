@@ -1,3 +1,12 @@
+'''
+ Module to detect and crop faces from photo:
+    1. Detect faces in photo
+    2. Align face to horizontal
+    3. Crop face region
+    4. Resize cropped face to 48x48
+'''
+
+
 import cv2
 import copy
 import numpy as np
@@ -57,7 +66,7 @@ def detect_face(name, mode):
             continue
 
         # resize image to 48 x 48
-        resized = resize_image(cropped, 48  , 48)
+        resized = resize_image(cropped, 48, 48)
 
         # save result to file
         cv2.imwrite(name + '.face' + str(count) + '.jpg', resized)
@@ -74,10 +83,9 @@ def read_image(name):
 
 def show_image(window_name, img):
     cv2.imshow(window_name, img)
-    # waits for user to press any key
-    # (this is necessary to avoid Python kernel form crashing)
+    # wait for user to press any key, this is necessary to avoid python kernel form crashing
     cv2.waitKey(0)
-    # closing all open windows
+    # close all open windows
     cv2.destroyAllWindows()
 
 
