@@ -16,7 +16,7 @@ from PIL import Image
 def detect_face(name, mode):
     # print instructions
     if mode == 'auto':
-        print('Auto detect mode selected.\nPlease be advised: If the result is satisfiable, '
+        print('Auto detect mode selected.\nPlease be advised: If the result is unsatisfiable, '
               'try manual mode and type in parameters to get better result.')
     elif mode == 'manual':
         print('Manual detect mode selected\nType s to set scaleFactor, type m to set minNeighbour, type c to confirm\n'
@@ -39,7 +39,7 @@ def detect_face(name, mode):
         return None
 
     # rotate and crop each detected face
-    count = 1
+    resized_list = []
     for (x, y, w, h) in faces:
         # create regions of interest on both original image and grayscale image
         roi_color = copy.deepcopy(original[y:y+h, x:x+w])
@@ -66,10 +66,9 @@ def detect_face(name, mode):
 
         # resize image to 48 x 48
         resized = resize_image(cropped, 48, 48)
+        resized_list.append(convert_to_grayscale(resized))
 
-        # save result to file
-        cv2.imwrite(name + '.face' + str(count) + '.jpg', resized)
-        count += 1
+    return faces, resized_list
 
 
 def read_image(name):
