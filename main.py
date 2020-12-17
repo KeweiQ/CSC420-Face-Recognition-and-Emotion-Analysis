@@ -10,7 +10,7 @@ import model_construction as mc
 import model_evaluation as me
 
 
-def main():
+def compare_models():
     """
     The main program for building the system. And we support following kinds of model:
         1. Convolutional Neural Network (CNN)
@@ -66,9 +66,6 @@ def main():
     pca_train, pca_test, pca_validation = fe.principalComponentAnalysis(img_train, img_test, img_validation,
                                                                         img_train_label, le, num_components=625)[:3]
 
-    # Fisherfaces: Get the fisherfaces_train and fisherfaces_test feature vectors for further training and predicting
-    fisher_train, fisher_test, fisher_validation = fe.fisherfaces(img_train, img_test, img_validation, img_train_label, le)
-
     if model_type == 'cnn':
         # Do the feature extraction algorithm on the splitted datasets
         if algorithm == 'eigenfaces':
@@ -80,6 +77,10 @@ def main():
             me.evaluate_model(model_trained, model_type, pca_test, img_test_label, algorithm)
 
         elif algorithm == 'fisherfaces':
+            # Fisherfaces: Get the fisherfaces_train and fisherfaces_test feature vectors for further training and predicting
+            fisher_train, fisher_test, fisher_validation = fe.fisherfaces(img_train, img_test, img_validation,
+                                                                          img_train_label, le)
+
             # Construct and train the selected model with the input train and validation datasets
             model_trained = mc.train_model(model_type, fisher_train, img_train_label, fisher_validation,
                                            img_validation_label, algorithm)
@@ -90,11 +91,19 @@ def main():
     elif model_type == 'svm' or model_type == 'adaboost' or model_type == 'mlp':
         # Do the feature extraction algorithm on the splitted datasets
         if algorithm == 'eigenfaces':
+            # Construct and train the selected model
             model_trained = mc.train_model(model_type, pca_train, img_train_label)
+            # Evaluate trained model
             me.evaluate_model(model_trained, model_type, pca_test, img_test_label)
 
         elif algorithm == 'fisherfaces':
+            # Fisherfaces: Get the fisherfaces_train and fisherfaces_test feature vectors for further training and predicting
+            fisher_train, fisher_test, fisher_validation = fe.fisherfaces(img_train, img_test, img_validation,
+                                                                          img_train_label, le)
+
+            # Construct and train the selected model
             model_trained = mc.train_model(model_type, fisher_train, img_train_label)
+            # Evaluate trained model
             me.evaluate_model(model_trained, model_type, fisher_test, img_test_label)
 
     else:
@@ -102,6 +111,10 @@ def main():
         return None
 
 
+def recognize_emotion():
+    return None
+
+
 # Main program
 if __name__ == '__main__':
-    main()
+    compare_models()
