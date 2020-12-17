@@ -63,13 +63,16 @@ def main():
     img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label, le = \
         dp.split_data(dataset_tuple_list)
 
+    # Eigenfaces: Get the pca_train and pca_test feature vectors for further training and predicting
+    pca_train, pca_test, pca_validation = fe.principalComponentAnalysis(img_train, img_test, img_validation,
+                                                                        img_train_label, le, num_components=625)[:3]
+
+    # Fisherfaces: Get the fisherfaces_train and fisherfaces_test feature vectors for further training and predicting
+    fisher_train, fisher_test, fisher_validation = fe.fisherfaces(img_train, img_test, img_validation, img_train_label, le)
+
     if model_type == 'cnn':
         # Do the feature extraction algorithm on the splitted datasets
         if algorithm == 'eigenfaces':
-            # Eigenfaces: Get the pca_train and pca_test feature vectors for further training and predicting
-            pca_train, pca_test, pca_validation = fe.principalComponentAnalysis(img_train, img_test, img_validation,
-                                                                                img_train_label, le, num_components=625)[:3]
-
             # Construct and train the selected model with the input train and validation datasets
             model_trained = mc.train_model(model_type, pca_train, img_train_label, pca_validation, img_validation_label,
                                            algorithm)
@@ -78,25 +81,26 @@ def main():
             me.evaluate_model(model_trained, model_type, pca_test, img_test_label, algorithm)
 
         elif algorithm == 'fisherfaces':
-            # Fisherfaces: Get the fisherfaces_train and fisherfaces_test feature vectors for further training and predicting
-            fisher_train, fisher_test, fisher_validation = fe.fisherfaces(img_train, img_test, img_validation,
-                                                                          img_train_label, le)
-
             # Construct and train the selected model with the input train and validation datasets
-            model_trained = mc.train_model(model_type, fisher_train, img_train_label, fisher_validation, img_validation_label,
-                                           algorithm)
+            model_trained = mc.train_model(model_type, fisher_train, img_train_label, fisher_validation,
+                                           img_validation_label, algorithm)
 
             # Perform me on the trained model with the test dataset
             me.evaluate_model(model_trained, model_type, fisher_test, img_test_label, algorithm)
 
-    elif model_type == 'svm':
-        pass
+    elif model_type == 'svm' or model_type == 'adaboost' or model_type == 'mlp':
+        # Do the feature extraction algorithm on the splitted datasets
+        if algorithm == 'eigenfaces':
+            model_trained = mc.train_model(model_type, pca_train, img_train_label)
+            me.evaluate_model(model_trained, model_type, pca_test, img_test_label)
 
-    elif model_type == 'adaboost':
-        pass
+        elif algorithm == 'fisherfaces':
+            model_trained = mc.train_model(model_type, fisher_train, img_train_label)
+            me.evaluate_model(model_trained, model_type, fisher_test, img_test_label)
 
-    elif model_type == 'mlp':
-        pass
+    else:
+        print("ERROR: invalid model type!")
+        return None
 
 
 # Main program

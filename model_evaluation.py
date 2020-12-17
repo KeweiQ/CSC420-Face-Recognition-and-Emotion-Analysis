@@ -16,7 +16,7 @@ from sklearn.preprocessing import label_binarize
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, mean_squared_error, roc_curve, auc
 
 
-def evaluate_model(model_trained, model_type, test, test_label, algorithm):
+def evaluate_model(model_trained, model_type, test, test_label, algorithm=None):
     """
     The function for evaluating the input model with the input test dataset and
     corresponding labels for the test dataset.
@@ -103,6 +103,9 @@ def evaluate_model(model_trained, model_type, test, test_label, algorithm):
         return None
 
 def plot_ROC(test_labels, grid_predictions):
+    # need to fix bug
+    return None
+
     # Compute ROC curve and ROC area for each class
     n_classes = 10
     fpr = dict()
