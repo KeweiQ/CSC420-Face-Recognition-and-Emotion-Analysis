@@ -10,7 +10,7 @@ import math
 import numpy as np
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
-import data_preprocess as pd
+import data_preprocess as dp
 
 from cv2 import cv2
 from sklearn.decomposition import PCA
@@ -307,9 +307,9 @@ if __name__ == '__main__':
     # Uncomment below to see the test result
     pass
     # # Load the datasets: train and test (also encoded labels)
-    # dataset_tuple_list = pd.load_dataset('CK+48')
+    # dataset_tuple_list = dp.load_dataset('CK+48')
     # img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label, le = \
-    #         pd.split_data(dataset_tuple_list)
+    #         dp.split_data(dataset_tuple_list)
     #
     # # Eigenfaces: Get the pca_train and pca_test feature vectors for further training and predicting
     # pca_train, pca_test, pca_validation = principalComponentAnalysis(img_train, img_test, img_validation, \

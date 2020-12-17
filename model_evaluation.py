@@ -1,9 +1,9 @@
 """
-    Module for evaluating the performance of different type of models
-        - ROC curve
-        - Mean Squared Error (MSE)
-        - Confusion Matrix
-        - Classification report
+ Module for evaluating the performance of different type of models
+    - ROC curve
+    - Mean Squared Error (MSE)
+    - Confusion Matrix
+    - Classification report
 """
 
 

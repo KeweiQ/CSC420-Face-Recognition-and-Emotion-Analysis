@@ -392,27 +392,22 @@ def resize_image(img, w, h):
 
 
 def test_detect_face():
-    # # images with no face
-    # detect_face('detect_face/no1.jpg', 'auto')
-    # detect_face('detect_face/no2.jpg', 'auto')
-    # detect_face('detect_face/no3.jpg', 'auto')
-    #
-    # # images with incomplete face
-    # detect_face('detect_face/incomplete1.jpg', 'auto')
-    # detect_face('detect_face/incomplete2.jpg', 'auto')
-    # detect_face('detect_face/incomplete3.jpg', 'auto')
-    #
-    # # images with single face
+    # images with no face
+    detect_face('detect_face/no1.jpg', 'auto')
+    detect_face('detect_face/no2.jpg', 'auto')
+    detect_face('detect_face/no3.jpg', 'auto')
+
+    # images with incomplete face
+    detect_face('detect_face/incomplete1.jpg', 'auto')
+    detect_face('detect_face/incomplete2.jpg', 'auto')
+    detect_face('detect_face/incomplete3.jpg', 'auto')
+
+    # images with single face
     detect_face('detect_face/single1.jpg', 'auto')
     detect_face('detect_face/single2.jpg', 'auto')
     detect_face('detect_face/single3.jpg', 'auto')
 
     # images with multi faces
-    # detect_face('detect_face/multi1.jpg', 'manual')
-    # detect_face('detect_face/multi2.jpg', 'auto')
-    # detect_face('detect_face/multi3.jpg', 'auto')
-
-
-# main program
-if __name__ == '__main__':
-    test_detect_face()
+    detect_face('detect_face/multi1.jpg', 'manual')
+    detect_face('detect_face/multi2.jpg', 'auto')
+    detect_face('detect_face/multi3.jpg', 'auto')
