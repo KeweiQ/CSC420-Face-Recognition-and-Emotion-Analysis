@@ -22,13 +22,14 @@ from keras.layers.normalization import BatchNormalization
 
 
 
-def buildModel(model_kind):
+def buildModel(model_kind, algorithm):
     """
     A function for constructing a Convolutional Neural Network (CNN)
     model for emotion classification
 
     Args:
         model_kind:  the input kind of the model that we want to build.
+        algorithm:   the feature algorithm that we want to perform.
     Returns:
         [model]:       the generated models aligned with the model_kind.
     """
@@ -36,7 +37,10 @@ def buildModel(model_kind):
         # Construct the convolutional neural network
         cnn_clf = Sequential()
         # The first layer
-        cnn_clf.add(Conv1D(32, kernel_size=3, activation='relu', input_shape=(1, 6), padding='same'))
+        if algorithm == 'eigenfaces':
+            cnn_clf.add(Conv1D(32, kernel_size=3, activation='relu', input_shape=(1, 625), padding='same'))
+        elif algorithm == 'fisherfaces':
+            cnn_clf.add(Conv1D(32, kernel_size=3, activation='relu', input_shape=(1, 6), padding='same'))
         cnn_clf.add(LeakyReLU(alpha=0.1))
         cnn_clf.add(MaxPooling1D(3, padding='same'))
         cnn_clf.add(Dropout(0.25))

@@ -61,13 +61,13 @@ def main():
                 img_train_label, le, num_components=625)[:3]
 
         # Construct the selected model
-        model = cm.buildModel(model_kind)
+        model = cm.buildModel(model_kind, algorithm)
 
         # Train the model with the input train and validation datasets
-        model_trained = train.train_model(model, model_kind, pca_train, img_train_label, pca_validation, img_validation_label)
+        model_trained = train.train_model(model, model_kind, pca_train, img_train_label, pca_validation, img_validation_label, algorithm)
 
         # Perform evaluation on the trained model with the test dataset
-        evaluation.evaluateModel(model_trained, model_kind, pca_test, img_test_label)
+        evaluation.evaluateModel(model_trained, model_kind, pca_test, img_test_label, algorithm)
 
     elif algorithm == 'fisherfaces':
         # Fisherfaces: Get the fisherfaces_train and fisherfaces_test feature vectors for further training and predicting
@@ -75,13 +75,13 @@ def main():
                 img_train_label, le)
 
         # Construct the selected model
-        model = cm.buildModel(model_kind)
+        model = cm.buildModel(model_kind, algorithm)
 
         # Train the model with the input train and validation datasets
-        model_trained = train.train_model(model, model_kind, fisher_train, img_train_label, fisher_validation, img_validation_label)
+        model_trained = train.train_model(model, model_kind, fisher_train, img_train_label, fisher_validation, img_validation_label, algorithm)
 
         # Perform evaluation on the trained model with the test dataset
-        evaluation.evaluateModel(model_trained, model_kind, fisher_test, img_test_label)
+        evaluation.evaluateModel(model_trained, model_kind, fisher_test, img_test_label, algorithm)
 
 
 # Main program
