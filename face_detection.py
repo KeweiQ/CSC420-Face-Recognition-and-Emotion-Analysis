@@ -1,16 +1,15 @@
-'''
+"""
  Module to detect and crop faces from photo:
     1. Detect faces in photo
     2. Align face to horizontal
     3. Crop face region
     4. Resize cropped face to 48x48
-'''
+"""
 
 
 import cv2
 import copy
 import numpy as np
-import matplotlib.pyplot as plt
 from PIL import Image
 
 

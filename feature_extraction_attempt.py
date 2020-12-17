@@ -1,18 +1,17 @@
-'''
+"""
  Module for using fisherfaces to extract features:
     1. PCA
     2. LDA
-'''
-
+"""
 
 
 import numpy as np
-import preprocess_dataset as ppd
+import data_preprocess as ppd
 
 from cv2 import cv2
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report
-# from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA
 
 
 def constructColumnMatrix(img_list):

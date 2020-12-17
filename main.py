@@ -1,15 +1,13 @@
-'''
-The module for building the face recognition and facial expression analysis
-system
-'''
+"""
+    The module for building the face recognition and facial expression analysis system
+"""
 
 
-import build_model as train
-import evaluation as evaluation
-import preprocess_dataset as pd
-import construct_model_old as cm
-import feature_extraction_final as fe
-
+import model_construction as train
+import model_evaluation as evaluation
+import data_preprocess as pd
+import model_construction_old as cm
+import feature_extraction as fe
 
 
 def main():

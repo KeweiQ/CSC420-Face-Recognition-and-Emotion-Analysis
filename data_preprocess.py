@@ -1,9 +1,9 @@
-'''
+"""
  Module for preprocessing the CK+48 dataset:
     1. Load dataset
     2. Shuffle dataset
     3. Split into training, validation and test datasets
-'''
+"""
 
 
 import glob

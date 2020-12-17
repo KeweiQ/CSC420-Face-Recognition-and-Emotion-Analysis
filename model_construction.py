@@ -1,11 +1,11 @@
-'''
+"""
     The module to build different type of models for the facial expression analysis.
     Model types including:
         - Convolutional Neural Network (CNN)
         - Support Vector Machine (SVM)
         - AdaBoost
         - Multilayer Perceptron (MLP)
-'''
+"""
 
 
 from sklearn.svm import SVC

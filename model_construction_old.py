@@ -7,8 +7,8 @@ This file includes:
 
 import keras
 import numpy as np
-import preprocess_dataset
-import feature_extraction_final as fe
+import data_preprocess
+import feature_extraction as fe
 
 from matplotlib import pyplot as plt
 from keras.utils import to_categorical
@@ -18,7 +18,6 @@ from keras.layers import Conv1D, MaxPooling1D
 from sklearn.metrics import classification_report
 from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.normalization import BatchNormalization
-
 
 
 def buildModel(model_kind, algorithm):

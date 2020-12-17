@@ -1,23 +1,22 @@
-'''
+"""
  Module for using fisherfaces to extract features:
     1. PCA (Principal component analysis)
     2. LDA (Linear Discriminant analysis)
     3. PCA(Eigenfaces) + LDA = Fisherfaces
-'''
+"""
 
 
 import math
 import numpy as np
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
-import preprocess_dataset as pd
+import data_preprocess as pd
 
 from cv2 import cv2
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report
-
 
 
 def constructRowMatrix(img_list):
