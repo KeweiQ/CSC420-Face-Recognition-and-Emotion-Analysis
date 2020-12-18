@@ -6,13 +6,10 @@
 """
 
 
-import math
 import numpy as np
-import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import data_preprocess as dp
 
-from cv2 import cv2
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.neural_network import MLPClassifier
@@ -288,40 +285,42 @@ def fisherfaces(train, test, validation, img_label_list, le):
     """
     # We chain the PCA and LDA to get the result of fisherfaces
     # First apply PCA algorithm on the datasets: train and test
-    pca_train, pca_test, pca_validation, pca = principalComponentAnalysis(train, test, validation, \
-        img_label_list, le, num_components=625, show_original=True, show_projected=True, show_eigenfaces=True)
+    pca_train, pca_test, pca_validation, pca = principalComponentAnalysis(train, test, validation, img_label_list, le,
+                                                                          num_components=625, show_original=True,
+                                                                          show_projected=True, show_eigenfaces=True)
 
     # Use the result from PCA to get the fisherfaces result vectors for train and test datasets
-    fisherfaces_train, fisherfaces_test, fisherfaces_validation, lda = linearDiscriminantAnalysis(pca_train, \
-        pca_test, pca_validation, pca, img_label_list, 7, le, show_fisherfaces=True, show_projected=True, \
-            show_eigenfaces=True)
+    fisherfaces_train, fisherfaces_test, fisherfaces_validation, lda = linearDiscriminantAnalysis(pca_train, pca_test,
+                                                                                                  pca_validation, pca,
+                                                                                                  img_label_list, 7, le,
+                                                                                                  show_fisherfaces=True,
+                                                                                                  show_projected=True,
+                                                                                                  show_eigenfaces=True)
 
-    # Return the fisherfaces_train and fisherfaces_test vectors
+    # Return fisherfaces_train and fisherfaces_test vectors
     return fisherfaces_train, fisherfaces_test, fisherfaces_validation, pca, lda
 
 
-# Main program for testing the correctness of the implemented algorithm by using a simple one layer
-# Muli-layer Perceptrons Classifier(MLP)
-if __name__ == '__main__':
-    # Uncomment below to see the test result
-    pass
-    # # Load the datasets: train and test (also encoded labels)
-    # dataset_tuple_list = dp.load_dataset('CK+48')
-    # img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label, le = \
-    #         dp.split_data(dataset_tuple_list)
-    #
-    # # Eigenfaces: Get the pca_train and pca_test feature vectors for further training and predicting
-    # pca_train, pca_test, pca_validation = principalComponentAnalysis(img_train, img_test, img_validation, \
-    #         img_train_label, le, num_components=625)[:3]
-    #
-    # # Fisherfaces: Get the fisherfaces_train and fisherfaces_test feature vectors for further training and predicting
-    # fisher_train, fisher_test, fisher_validation = fisherfaces(img_train, img_test, img_validation, \
-    #         img_train_label, le)
-    #
-    # # Train a nsimple neural network to test the correctness on the implemented algorithm
-    # print("\nFitting the classifier to the training set\n")
-    # clf = MLPClassifier(hidden_layer_sizes=(1024,), batch_size=256, verbose=True, early_stopping=True).\
-    #     fit(fisher_train, img_train_label)
-    # y_pred = clf.predict(fisher_test)
-    # print(classification_report(img_test_label, y_pred, target_names=['/anger', '/contempt', '/disgust', \
-    #     '/fear', '/happy', '/sadness', '/surprise']))
+def test():
+    """
+        Program for testing the correctness of the implemented algorithm by using a simple one layer mlp
+    """
+    # Load the datasets: train and test (also encoded labels)
+    dataset_tuple_list = dp.load_dataset('CK+48')
+    img_train, img_train_label, img_validation, img_validation_label, img_test, img_test_label, le =\
+        dp.split_data(dataset_tuple_list)
+
+    # Eigenfaces: Get the pca_train and pca_test feature vectors for further training and predicting
+    pca_train, pca_test, pca_validation, pca = principalComponentAnalysis(img_train, img_test, img_validation,
+                                                                     img_train_label, le, num_components=625)
+
+    # Fisherfaces: Get the fisherfaces_train and fisherfaces_test feature vectors for further training and predicting
+    fisher_train, fisher_test, fisher_validation, pca, lda = fisherfaces(img_train, img_test, img_validation,
+                                                                         img_train_label, le)
+
+    # Train a nsimple neural network to test the correctness on the implemented algorithm
+    print("\nFitting the classifier to the training set\n")
+    clf = MLPClassifier(hidden_layer_sizes=(1024,), batch_size=256, verbose=True, early_stopping=True).fit(fisher_train, img_train_label)
+    y_pred = clf.predict(fisher_test)
+    print(classification_report(img_test_label, y_pred, target_names=['/anger', '/contempt', '/disgust', '/fear',
+                                                                      '/happy', '/sadness', '/surprise']))

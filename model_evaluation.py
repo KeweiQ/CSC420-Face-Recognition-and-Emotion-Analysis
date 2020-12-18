@@ -8,12 +8,8 @@
 
 
 import numpy as np
-import matplotlib.pyplot as plt
-
 from keras.utils import to_categorical
-from itertools import cycle
-from sklearn.preprocessing import label_binarize
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, mean_squared_error, roc_curve, auc
+from sklearn.metrics import confusion_matrix, classification_report, mean_squared_error
 
 
 def evaluate_model(model_trained, model_type, test, test_label, algorithm=None):
