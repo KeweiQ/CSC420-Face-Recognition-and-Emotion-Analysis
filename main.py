@@ -147,10 +147,10 @@ def recognize_emotion(name, mode, dataset):
     fisherfaces_face = fisherfaces_face.reshape(-1, 1, 6)
     prediction = model_trained.predict(fisherfaces_face)
     recognized = np.argmax(prediction, axis=1)
-    print(f'\npreciction:\n{prediction}\nrecognized:\n{recognized}')
+    print(f'\nprediction:\n{prediction}\nrecognized:\n{recognized}')
 
 
 # Main program
 if __name__ == '__main__':
-    # compare_models()
-    recognize_emotion('detect_face/multi1.jpg', 'auto', 'CK+48')
+    compare_models()
+    # recognize_emotion('detect_face/multi1.jpg', 'auto', 'CK+48')
