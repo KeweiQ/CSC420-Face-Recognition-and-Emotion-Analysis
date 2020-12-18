@@ -17,8 +17,7 @@ To run the system on your local device, the installation of the following Python
 - Matplotlab
 
 ## To Run this System
-- To perform evaluation of our system on FER2013 database, you need to download it into your own local device since it's too 
-  large to upload it into our repo. You can find the download link here: https://www.kaggle.com/deadskull7/fer2013.
+
 - Change the direction to this repository in your local device;
 - Run `python3 main.py`;
 - Follow the prompts. Note that the responses are case-sensitive. 
