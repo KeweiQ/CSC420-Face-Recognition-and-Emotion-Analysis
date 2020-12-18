@@ -89,7 +89,7 @@ def train_model(model_type, train, train_label, validation=None, validation_labe
         param_grid = {'C': [1, 10], 'gamma': [0.5, 0.1], 'kernel': ['rbf', 'poly', 'sigmoid']}
 
         # grid search
-        grid = GridSearchCV(SVC(), param_grid, verbose=2, n_jobs=1)
+        grid = GridSearchCV(SVC(), param_grid, verbose=2, n_jobs=10)
         # train model with best hyperparameters
         grid.fit(train, train_label)
         print(grid.best_params_)
@@ -101,7 +101,7 @@ def train_model(model_type, train, train_label, validation=None, validation_labe
         param_grid = {'n_estimators': [500, 1000], 'learning_rate': [0.01, 0.1]}
 
         # grid search
-        grid = GridSearchCV(AdaBoostClassifier(), param_grid, verbose=2, n_jobs=1)
+        grid = GridSearchCV(AdaBoostClassifier(), param_grid, verbose=2, n_jobs=10)
         # train model with best hyperparameters
         grid.fit(train, train_label)
         print(grid.best_params_)
@@ -116,7 +116,7 @@ def train_model(model_type, train, train_label, validation=None, validation_labe
         }
 
         # grid search
-        grid = GridSearchCV(MLPClassifier(), param_grid, verbose=2, n_jobs=1)
+        grid = GridSearchCV(MLPClassifier(), param_grid, verbose=2, n_jobs=10)
         # train model with best hyperparameters
         grid.fit(train, train_label)
         print(grid.best_params_)
