@@ -3,9 +3,7 @@
 """
 
 
-import cv2
 import numpy as np
-
 import data_preprocess as dp
 import face_detection as fd
 import feature_extraction as fe
@@ -120,6 +118,25 @@ def compare_models():
 
 
 def recognize_emotion(name, mode, dataset):
+    """
+        The main program for building the system. And we support following kinds of model:
+            1. Convolutional Neural Network (CNN)
+            2. Support Vector Machine (SVM)
+            3. Adaboost
+            4. Multilayer Perceptron (MLP)
+
+        Args:
+            name: path of the photo for recognizing
+            mode: mode used for face detection, 'auto' or 'manual
+            dataset: dataset used for face recognition, 'CK+48' or 'fer2013'
+
+        Returns:
+            predicted: emotion prediction (numerical) of detected faces using cnn and fisherfaces
+            recognition: emotion recognition (categorical) of detected faces using cnn and fisherfaces
+
+        Note: result will be printed to standard output, accuracy needs to be improved.
+    """
+
     # Load the dataset into a shuffled list of tuples
     dataset_tuple_list = dp.load_dataset(dataset)
 
