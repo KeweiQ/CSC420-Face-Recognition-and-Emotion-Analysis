@@ -166,6 +166,8 @@ def recognize_emotion(name, mode, dataset):
     recognized = np.argmax(prediction, axis=1)
     print(f'\nprediction:\n{prediction}\nrecognized:\n{recognized}')
 
+    return prediction, recognized
+
 
 # Main program
 if __name__ == '__main__':
