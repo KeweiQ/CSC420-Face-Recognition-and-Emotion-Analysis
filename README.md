@@ -18,6 +18,8 @@ To run the system on your local device, the installation of the following Python
 
 ## To Run this System
 
+- To perform the evaluation of our system on FER2013 database, you need to download it into your local device. 
+  Since the FER2013 is too large to upload in our repo, you can find the download link here: https://www.kaggle.com/deadskull7/fer2013.
 - Change the direction to this repository in your local device;
 - Run `python3 main.py`;
 - Follow the prompts. Note that the responses are case-sensitive. 
