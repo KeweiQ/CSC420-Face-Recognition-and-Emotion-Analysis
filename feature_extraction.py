@@ -265,7 +265,7 @@ def linearDiscriminantAnalysis(pca_train, pca_test, pca_validation, pca, img_lab
         plt.show()
         plt.close()
 
-    return fisherfaces_train, fisherfaces_test, fisherfaces_validation
+    return fisherfaces_train, fisherfaces_test, fisherfaces_validation, lda
 
 
 def fisherfaces(train, test, validation, img_label_list, le):
@@ -292,13 +292,12 @@ def fisherfaces(train, test, validation, img_label_list, le):
         img_label_list, le, num_components=625, show_original=True, show_projected=True, show_eigenfaces=True)
 
     # Use the result from PCA to get the fisherfaces result vectors for train and test datasets
-    fisherfaces_train, fisherfaces_test, fisherfaces_validation = linearDiscriminantAnalysis(pca_train, \
+    fisherfaces_train, fisherfaces_test, fisherfaces_validation, lda = linearDiscriminantAnalysis(pca_train, \
         pca_test, pca_validation, pca, img_label_list, 7, le, show_fisherfaces=True, show_projected=True, \
             show_eigenfaces=True)
 
     # Return the fisherfaces_train and fisherfaces_test vectors
-    return fisherfaces_train, fisherfaces_test, fisherfaces_validation
-
+    return fisherfaces_train, fisherfaces_test, fisherfaces_validation, pca, lda
 
 
 # Main program for testing the correctness of the implemented algorithm by using a simple one layer
